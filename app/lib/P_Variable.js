@@ -1928,7 +1928,7 @@ export function getLanguage() {
       image5: 'Ne pare rău, putem accepta doar 5 imagini pentru o recenzie.',
       rightEmail: 'Vă rugăm să introduceți un e-mail valid',
       unknown: 'necunoscut',
-      acticleList: ['Politica de confidențialitate', 'Termeni de utilizare', 'Politica De Retur', 'Despre noi'],
+      acticleList: ['Politica de confidențialitate', 'Politica de rambursare', 'Termenii serviciului'],
       discountZone: 'zonă de reducere a magazinului',
       free7: 'Serviciu gratuit de schimb și rambursare în termen de șapte zile',
       deliver: 'Livrare gratuită',

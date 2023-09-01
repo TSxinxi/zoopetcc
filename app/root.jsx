@@ -46,7 +46,7 @@ export const links = () => {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    { rel: 'icon', href: '//www.croiala.com/cdn/shop/files/123_10x_3a8f1e46-616d-48a7-9a12-9015c52cfd45_32x32.png?v=1689668956' },
+    { rel: 'icon', href: '//cdn.shopifycdn.net/s/files/1/0816/3632/7730/files/321.png?crop=center&height=32&v=1693470694&width=32' },
   ];
 };
 
@@ -85,14 +85,14 @@ export default function App() {
       localStorage.setItem('refererName', getReferer())
     }
     useEffect(() => {
-      (function (h, o, t, j, a, r) {
-        h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
-        h._hjSettings = { hjid: 3612403, hjsv: 6 };
-        a = o.getElementsByTagName('head')[0];
-        r = o.createElement('script'); r.async = 1;
-        r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-        a.appendChild(r);
-      })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+      // (function (h, o, t, j, a, r) {
+      //   h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
+      //   h._hjSettings = { hjid: 3612403, hjsv: 6 };
+      //   a = o.getElementsByTagName('head')[0];
+      //   r = o.createElement('script'); r.async = 1;
+      //   r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+      //   a.appendChild(r);
+      // })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
 
     //   window.dataLayer = window.dataLayer || [];
     //   function gtag() { dataLayer.push(arguments); }

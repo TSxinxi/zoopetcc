@@ -18,10 +18,6 @@ export function getShopAddress() {
   return 'zoopetcc.myshopify.com';
 }
 
-export function getShopLink() {
-  return 'zoopet.cc';
-}
-
 export function getDomain() {
   return 'https://gateway.antdiy.vip';
   // return 'https://gateway.di79.com';

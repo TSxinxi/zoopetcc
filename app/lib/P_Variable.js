@@ -14,6 +14,7 @@ if (canUseDOM) {
 }
 
 export function getShopAddress() {
+  // return 'uniquehzts.myshopify.com';
   // return 'croiala.myshopify.com';
   return 'zoopetcc.myshopify.com';
 }
@@ -29,10 +30,6 @@ export function openWhatsApp() {
     isOpen: true,
   }
   return whatsApp;
-}
-
-export function openComment() {
-  return true;
 }
 
 export function getDirection() {

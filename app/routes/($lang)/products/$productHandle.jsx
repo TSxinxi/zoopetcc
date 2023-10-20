@@ -3,7 +3,7 @@ import { useRef, useMemo, useEffect, useState } from 'react';
 import { Listbox } from '@headlessui/react';
 import { defer } from '@shopify/remix-oxygen';
 import fetch from '../../../fetch/axios';
-import { getShopAddress, openComment, getLanguage, getDirection, getDomain } from '~/lib/P_Variable';
+import { getShopAddress, getLanguage, getDirection, getDomain } from '~/lib/P_Variable';
 import $ from 'jquery'
 import {
   useLoaderData,
@@ -476,6 +476,7 @@ export default function Product() {
   const [filtRat, setFiltRat] = useState('');
   const [currency, setCurrency] = useState('');
   const [commentSum, setCommentSum] = useState('');
+  const [openJudgeme, setOpenJudgeme] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
@@ -514,27 +515,37 @@ export default function Product() {
         window.localStorage.setItem('sourceName', param)
         window.localStorage.setItem('sourceProductId', product.id)
       }
-      if (product_id && openComment()) {
-        // 评论
-        GetJudge(product_id, 1, sortBy).then(res => {
-          if (res) {
-            setComment(res)
-          } else {
-            setIsOpenComment(false)
-          }
-        })
-        // 评论头部
-        GetCommentHeader().then(res => {
-          if (res) {
-            setCommentHeader(res)
-            var setDiv = document.createElement("div");
-            setDiv.innerHTML = res;
-            let averageText = setDiv.getElementsByClassName('jdgm-rev-widg__summary-text')[0]
-            if (averageText && averageText.innerHTML != LText.commentResult) {
-              let summaryNum = averageText.innerHTML.match(/\d+(\.\d+)?/g)[0]
-              if (summaryNum) {
-                setCommentSum(summaryNum)
-              }
+
+      if (product_id) {
+        // 是否打开评论
+        fetch.get(`${getDomain()}/account-service/site_plug/pass/get_plug_state?store=${getShopAddress()}&site_code=${currencyCode || LText.type}`).then(res => {
+          if (res.data && res.data.data && res.data.data.length > 0) {
+            let judgemeData = res.data.data.filter(i => i.plug_name == 'judgeme')[0]
+            if (judgemeData && judgemeData.plug_state == 1) {
+              setOpenJudgeme(true)
+              // 评论
+              GetJudge(product_id, 1, sortBy).then(res => {
+                if (res) {
+                  setComment(res)
+                } else {
+                  setIsOpenComment(false)
+                }
+              })
+              // 评论头部
+              GetCommentHeader().then(res => {
+                if (res) {
+                  setCommentHeader(res)
+                  var setDiv = document.createElement("div");
+                  setDiv.innerHTML = res;
+                  let averageText = setDiv.getElementsByClassName('jdgm-rev-widg__summary-text')[0]
+                  if (averageText && averageText.innerHTML != LText.commentResult) {
+                    let summaryNum = averageText.innerHTML.match(/\d+(\.\d+)?/g)[0]
+                    if (summaryNum) {
+                      setCommentSum(summaryNum)
+                    }
+                  }
+                }
+              })
             }
           }
         })
@@ -569,8 +580,8 @@ export default function Product() {
               <span>{currencyCode || LText.type}</span>
             </div>
 
-            <img className='logo' src={`https://platform.antdiy.vip/static/image/zoopetcc_logo.png`} />
-            <p onClick={() => { window.open('https://' + getShopAddress()) }}><img src="https://platform.antdiy.vip/static/image/hultoo_home.svg" /></p>
+            <img className='logo' src={`https://platform.antdiy.vip/static/image/zoopetcc_logo2.png`} />
+            <p onClick={() => { window.open('https://' + getShopAddress()) }}><img src="https://platform.antdiy.vip/static/image/zoopetcc_home.svg" /></p>
             {/* <p></p> */}
           </div>
         </div>
@@ -588,7 +599,7 @@ export default function Product() {
                   {title}
                 </Heading>
                 {
-                  commentSum && openComment() ? <div className='opinion_sum' onClick={() => { goComment() }}>
+                  commentSum && openJudgeme ? <div className='opinion_sum' onClick={() => { goComment() }}>
                     <img src="https://platform.antdiy.vip/static/image/hydrogen_icon_star_quan.svg" />
                     <img src="https://platform.antdiy.vip/static/image/hydrogen_icon_star_quan.svg" />
                     <img src="https://platform.antdiy.vip/static/image/hydrogen_icon_star_quan.svg" />
@@ -636,7 +647,7 @@ export default function Product() {
           </div>
         </div>
         {
-          openComment() && isOpenComment ? <div className='comment_product borderf5'>
+          openJudgeme && isOpenComment ? <div className='comment_product borderf5'>
             <div className='comment_box'>
               <div className='comment_box_title'>{LText.comTit}</div>
               {commentHeader ? <div
@@ -799,37 +810,59 @@ export default function Product() {
           //     )}
           //   </button>
           // </div>
-          <div className='buy_button sticky_bottom' style={{ padding: getDirection() === 'rtl' ? '.5rem .5rem .5rem .8rem' : '.5rem .8rem .5rem .5rem' }}>
-            <button className='buy_btn_new'>
-              {/* <img src="https://platform.antdiy.vip/static/image/hultoo_buybtn.png" /> */}
-              {/* {isOutOfStock ? (
-                <Text className='py-3 px-6'>{LText.sold}</Text>//卖完了
-              ) : ( */}
-              <div className='bg_color'>
-                <Text //立即购买
-                  as="span"
-                  className="flex items-center justify-center gap-2 py-3 px-6"
-                  onClick={() => { goSettleAccounts() }}
-                >
-                  <span>{LText.buy}</span>
-                </Text>
-                <span className="light_bg"></span>
-                <span className="right_bg"></span>
-              </div>
-              <img src="https://platform.antdiy.vip/static/image/hultoo_light.png" />
-              {/* )} */}
-            </button>
-            <div className='buy_btn_price'>
-              {isOnSale && (
-                <span className='btn_price btn_price_old'>
-                  <i>{currency} </i>{parseFloat(selectedVariant?.compareAtPrice?.amount)}
+          <div className='settle_accounts_foot'>
+            <div>
+              {/* <div className='buy_btn_price'>
+                <span className='btn_price btn_price_new'>
+                  <i>{currency} </i>{parseFloat(selectedVariant?.price?.amount)}
                 </span>
-              )}
-              <span className='btn_price btn_price_new'>
-                <i>{currency} </i>{parseFloat(selectedVariant?.price?.amount)}
-              </span>
+                {isOnSale && (
+                  <span className='btn_price btn_price_old'>
+                    <i>{currency} </i>{parseFloat(selectedVariant?.compareAtPrice?.amount)}
+                  </span>
+                )}
+              </div> */}
+              <div className='submit_btn'>
+                <button className='inline-block rounded font-medium text-center w-full bg-primary text-contrast paddingT5'>
+                  <Text //立即购买
+                    as="span"
+                    className="flex items-center justify-center gap-2 py-3 px-6 buy_text"
+                    style={{ maxWidth: 'initial' }}
+                    onClick={() => { goSettleAccounts() }}
+                  >
+                    <span>{LText.buy}</span>
+                  </Text>
+                </button>
+              </div>
             </div>
           </div>
+          // <div className='buy_button sticky_bottom' style={{ padding: getDirection() === 'rtl' ? '.5rem .5rem .5rem .8rem' : '.5rem .8rem .5rem .5rem' }}>
+          //   <button className='buy_btn_new'>
+          //     <div className='bg_color'>
+          //       <Text //立即购买
+          //         as="span"
+          //         className="flex items-center justify-center gap-2 py-3 px-6"
+          //         onClick={() => { goSettleAccounts() }}
+          //       >
+          //         <span>{LText.buy}</span>
+          //       </Text>
+          //       <span className="light_bg"></span>
+          //       <span className="right_bg"></span>
+          //     </div>
+          //     <img src="https://platform.antdiy.vip/static/image/hultoo_light.png" />
+          //     {/* )} */}
+          //   </button>
+          //   <div className='buy_btn_price'>
+          //     {isOnSale && (
+          //       <span className='btn_price btn_price_old'>
+          //         <i>{currency} </i>{parseFloat(selectedVariant?.compareAtPrice?.amount)}
+          //       </span>
+          //     )}
+          //     <span className='btn_price btn_price_new'>
+          //       <i>{currency} </i>{parseFloat(selectedVariant?.price?.amount)}
+          //     </span>
+          //   </div>
+          // </div>
         )}
         <div className='back'><span></span></div>
       </Section>

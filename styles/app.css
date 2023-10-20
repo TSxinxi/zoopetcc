@@ -149,7 +149,7 @@ shop-pay-button {
     align-items: center;
     justify-content: space-between;
     padding: 20px 10px;
-    background: #004754;
+    background: #ffffff;
     position: fixed;
     top: 0;
     left: unset;
@@ -191,8 +191,8 @@ shop-pay-button {
     width: 100%;
   }
   .sticky_img {
-    background: #004754;
-    padding: 10px;
+    background: #ffffff;
+    /* padding: 10px; */
     margin-bottom: 14px;
   }
   .sticky_img .swimlane{
@@ -523,12 +523,12 @@ shop-pay-button {
     justify-content: center;
     flex-wrap: wrap;
     padding: 20px 20px 70px;
-    background: #004754;
+    background: #F3F3F3;
     gap: 20px;
   }
   .article_nav a{
     font-size: 16px;
-    color: rgba(255,255,255,0.80);
+    color: #333333;
     text-align: right;
     font-weight: 400;
   }
@@ -536,7 +536,7 @@ shop-pay-button {
     color: #ffffff;
   } */
   .article_nav a:hover{
-    color: #ffffff;
+    color: #333333;
   }
   .article_box{
     display: flex;
